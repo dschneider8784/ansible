@@ -1,5 +1,5 @@
 - name: Download Git-secrets
-  ansible.buildin.git:
+  ansible.builtin.git:
     repo: https://github.com/awslabs/git-secrets.git
     dest: /tmp/git-secrets
   tags:
@@ -18,12 +18,13 @@
     - tools
 
 - name: Install gh-cli
+  become: true
   shell: |
-    sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && sudo apt update \
-    && sudo apt install gh -y
+    mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    &&  chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" |  tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    &&  apt update \
+    &&  apt install gh -y
   tags: 
     - install
     - gh-cli
@@ -41,7 +42,8 @@
 
 - name: Install latest nodejs lts
   shell: |
-    NVM_DIR="$HOME/.nvm"
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     nvm install --lts
   tags:
     - install
@@ -51,6 +53,8 @@
 
 - name: Install node packages (commitizen, conventional-changelog, @digitalroute/cz-conventional-changelog-for-jira, tldr)
   shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     npm install -g commitizen cz-conventional-changelog @digitalroute/cz-conventional-changelog-for-jira tldr
   tags:
     - install

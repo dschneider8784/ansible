@@ -1,14 +1,15 @@
 - name: Install AWS CLI
+  become: true
   shell: |
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
-    sudo ./aws/install
+    ./aws/install
   tags:
     - install
     - aws
 
 - name: Install boto3
-  ansible.buildin.pip:
+  ansible.builtin.pip:
     name: boto3
   tags:
     - install

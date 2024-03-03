@@ -14,9 +14,9 @@
       - install
       - core
   tasks:
-    - import_tasks: tasks/linux/core-setup.yml
-    - import_tasks: tasks/linux/tools-setup.yml
-    - import_tasks: tasks/linux/aws-setup.yml
-    - import_tasks: tasks/linux/docker-setup.yml
-    - import_tasks: tasks/linux/k8s-setup.yml
-    - import_tasks: tasks/linux/aws-setup.yml
+    - import_tasks: tasks/linux/core-setup.yaml
+    - import_tasks: tasks/linux/tools-setup.yaml
+    - import_tasks: tasks/linux/aws-setup.yaml
+    - import_tasks: tasks/linux/docker-setup.yaml
+    - import_tasks: tasks/linux/k8s-setup.yaml
+    - import_tasks: tasks/linux/aws-setup.yaml

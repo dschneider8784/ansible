@@ -1,13 +1,13 @@
 - name: Add Kubectl repositories to apt and install kubectl
   become: true
   shell: |
-    sudo apt-get update
+    apt-get update
     if [ ! -d /etc/apt/keyrings ]; then
-      sudo mkdir -p -m 755 /etc/apt/keyrings
+      mkdir -p -m 755 /etc/apt/keyrings
     fi
     curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    sudo apt-get update
-    sudo apt-get install -y kubectl
+    apt-get update
+    apt-get install -y kubectl
   tags:
     - install
     - k8s
@@ -15,10 +15,10 @@
 - name: Add Helm repositories to apt and install helm
   become: true
   shell: |
-    curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-    sudo apt-get update
-    sudo apt-get install helm
+    curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
+    apt-get update
+    apt-get install helm
   tags:
     - install
     - k8s
