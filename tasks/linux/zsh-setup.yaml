@@ -23,7 +23,7 @@
     - oh-my-zsh
 
 - name: Install oh-my-zsh plugins (zsh-autosuggestions)
-  ansible.buildin.git:
+  ansible.builtin.git:
     repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
     dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
   tags:
