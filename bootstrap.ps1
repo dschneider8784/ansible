@@ -31,7 +31,7 @@ workflow New-ComputerSetup {
 
         Invoke-WebRequest -Uri "$NerdFontsURI/download/$LatestVersion/$FontName.zip" -OutFile "$FontName.zip"
 
-        Expand-Archive -Path "$FontName.zip"
+        Expand-Archive -Path -Force"$FontName.zip"
 
         $ShellApplication = New-Object -ComObject shell.application
         $Fonts = $ShellApplication.NameSpace(0x14)
@@ -42,7 +42,7 @@ workflow New-ComputerSetup {
     }
     
      # Enable Hyper-V Virtualization and WSL
-    Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Windows-Subsystem-Linux -Confirm:$false
+    Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Windows-Subsystem-Linux -NoRestart
     Restart-Computer -Wait
 
     # Install winget packages (dockerdesktop, vscode, git, windows terminal, oh-my-posh)
@@ -60,9 +60,8 @@ workflow New-ComputerSetup {
 }
 
 $AtStartup = New-JobTrigger -AtStartup
-Register-ScheduledJob -Name ResumeWorkflow -Trigger $AtStartup -ScriptBlock {Import-Module PSWorkflow; Get-Job ComputerSetup -State Suspended | Resume-Job}
-
 New-ComputerSetup -JobName ComputerSetup
+Register-ScheduledJob -Name ResumeWorkflow -Trigger $AtStartup -ScriptBlock {Import-Module PSWorkflow; Get-Job ComputerSetup -State Suspended | Resume-Job}
 
 Import-Module PSWorkflow
 # Unregister scheduled job if completed
