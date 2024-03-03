@@ -42,7 +42,7 @@ workflow New-ComputerSetup {
     }
     
      # Enable Hyper-V Virtualization and WSL
-    Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Windows-Subsystem-Linux
+    Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Windows-Subsystem-Linux -Confirm:$false
     Restart-Computer -Wait
 
     # Install winget packages (dockerdesktop, vscode, git, windows terminal, oh-my-posh)
