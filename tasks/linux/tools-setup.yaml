@@ -1,0 +1,61 @@
+- name: Download Git-secrets
+  ansible.buildin.git:
+    repo: https://github.com/awslabs/git-secrets.git
+    dest: /tmp/git-secrets
+  tags:
+    - install
+    - git-secrets
+    - tools
+
+- name: Install Git-secrets
+  become: true
+  shell: |
+    cd /tmp/git-secrets
+    make install
+  tags:
+    - install
+    - git-secrets
+    - tools
+
+- name: Install gh-cli
+  shell: |
+    sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+  tags: 
+    - install
+    - gh-cli
+    - tools
+    - github
+
+- name: Install nvm
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+  tags:
+    - install
+    - nvm
+    - node
+    - tools
+
+- name: Install latest nodejs lts
+  shell: |
+    NVM_DIR="$HOME/.nvm"
+    nvm install --lts
+  tags:
+    - install
+    - nvm
+    - node
+    - tools
+
+- name: Install node packages (commitizen, conventional-changelog, @digitalroute/cz-conventional-changelog-for-jira, tldr)
+  shell: |
+    npm install -g commitizen cz-conventional-changelog @digitalroute/cz-conventional-changelog-for-jira tldr
+  tags:
+    - install
+    - nvm
+    - node
+    - tools
+    - commitizen
+    - tldr

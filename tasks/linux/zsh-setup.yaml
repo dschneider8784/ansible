@@ -1,0 +1,33 @@
+- name: Install Systems Packages (zsh)
+  become: true
+  apt:
+    name: ["zsh"]
+  tags:
+    - install
+    - zsh
+    - oh-my-zsh
+
+- name: Install Oh My Zsh
+  shell: |
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  tags:
+    - install
+    - zsh
+    - oh-my-zsh
+
+- name: Set default shell to zsh
+  shell: chsh -s $(which zsh)
+  tags:
+    - install
+    - zsh
+    - oh-my-zsh
+
+- name: Install oh-my-zsh plugins (zsh-autosuggestions)
+  ansible.buildin.git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+  tags:
+    - install
+    - zsh
+    - oh-my-zsh
+    - zsh-autosuggestions
