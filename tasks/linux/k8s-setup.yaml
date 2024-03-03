@@ -1,39 +1,36 @@
-- name: Add Kubectl repositories to apt and install kubectl
+- name: K8s > Install Kubectl
   become: true
   shell: |
-    apt-get update
-    if [ ! -d /etc/apt/keyrings ]; then
-      mkdir -p -m 755 /etc/apt/keyrings
-    fi
-    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    apt-get update
-    apt-get install -y kubectl
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+    echo "$(<kubectl.sha256) kubectl" | sha256sum --check
+    install -m 755 kubectl /usr/local/bin/kubectl
+    rm kubectl kubectl.sha256
   tags:
     - install
     - k8s
 
-- name: Add Helm repositories to apt and install helm
+- name: K8s > Install Helm
   become: true
   shell: |
     curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
-    apt-get update
-    apt-get install helm
+    apt update
+    apt install helm
   tags:
     - install
     - k8s
     - helm
 
-- name: Install FluxCD CLI
+- name: K8s > Install FluxCD CLI
   become: true
-  shell: |
-    curl -s https://toolkit.fluxcd.io/install.sh | bash
+  shell: curl -s https://fluxcd.io/install.sh | bash
   tags:
     - install
     - k8s
     - fluxcd
 
-- name: Install Kustomize
+- name: K8s > Install Kustomize
   become: true
   shell: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
   tags:
@@ -41,7 +38,7 @@
     - k8s
     - kustomize
 
-- name: Install argocd-cli
+- name: K8s > Install argocd-cli
   become: true
   shell: |
     curl -sSL -o /tmp/argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
@@ -52,7 +49,7 @@
     - k8s
     - argocd
 
-- name: Install krew
+- name: K8s > Install krew
   shell: |
     (
       set -x; cd "$(mktemp -d)" &&
@@ -68,7 +65,7 @@
     - k8s
     - krew
 
-- name: Install kubectl plugins
+- name: K8s > Install kubectl plugins (ctx, ns, tree, view-utilization)
   shell: |
     kubectl krew install ctx
     kubectl krew install ns
