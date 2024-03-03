@@ -18,22 +18,24 @@ workflow New-ComputerSetup {
     Remove-Item "Setup.msix"
 
     # Install Nerd Fonts
-    $FontName = 'Ubuntu'
-    $NerdFontsURI = 'https://github.com/ryanoasis/nerd-fonts/releases'
+    inlineScript {
+        $FontName = 'Ubuntu'
+        $NerdFontsURI = 'https://github.com/ryanoasis/nerd-fonts/releases'
 
-    $WebResponse = Invoke-WebRequest -Uri "$NerdFontsURI/latest" -MaximumRedirection 0 -ErrorAction SilentlyContinue
+        $WebResponse = Invoke-WebRequest -Uri "$NerdFontsURI/latest" -MaximumRedirection 0 -ErrorAction SilentlyContinue
 
-    $LatestVersion = Split-Path -Path $WebResponse.Headers['Location'] -Leaf
+        $LatestVersion = Split-Path -Path $WebResponse.Headers['Location'] -Leaf
 
-    Invoke-WebRequest -Uri "$NerdFontsURI/download/$LatestVersion/$FontName.zip" -OutFile "$FontName.zip"
+        Invoke-WebRequest -Uri "$NerdFontsURI/download/$LatestVersion/$FontName.zip" -OutFile "$FontName.zip"
 
-    Expand-Archive -Path "$FontName.zip"
+        Expand-Archive -Path "$FontName.zip"
 
-    $ShellApplication = New-Object -ComObject shell.application
-    $Fonts = $ShellApplication.NameSpace(0x14)
+        $ShellApplication = New-Object -ComObject shell.application
+        $Fonts = $ShellApplication.NameSpace(0x14)
 
-    Get-ChildItem -Path ".\$FontName" -Include '*.ttf' -Recurse | ForEach-Object -Process {
-        $Fonts.CopyHere($_.FullName)
+        Get-ChildItem -Path ".\$FontName" -Include '*.ttf' -Recurse | ForEach-Object -Process {
+            $Fonts.CopyHere($_.FullName)
+        }
     }
     
      # Enable Hyper-V Virtualization and WSL
