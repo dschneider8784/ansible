@@ -1,4 +1,4 @@
-- name: Download Git-secrets
+- name: Tools > Download Git-secrets
   ansible.builtin.git:
     repo: https://github.com/awslabs/git-secrets.git
     dest: /tmp/git-secrets
@@ -7,7 +7,7 @@
     - git-secrets
     - tools
 
-- name: Install Git-secrets
+- name: Tools > Install Git-secrets
   become: true
   shell: |
     cd /tmp/git-secrets
@@ -17,10 +17,10 @@
     - git-secrets
     - tools
 
-- name: Install gh-cli
+- name: Tools > Install gh-cli
   become: true
   shell: |
-    mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
     &&  chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" |  tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     &&  apt update \
@@ -31,7 +31,7 @@
     - tools
     - github
 
-- name: Install nvm
+- name: Tools > Install nvm
   shell: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
   tags:
@@ -40,7 +40,7 @@
     - node
     - tools
 
-- name: Install latest nodejs lts
+- name: Tools > Install latest nodejs lts
   shell: |
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -51,7 +51,7 @@
     - node
     - tools
 
-- name: Install node packages (commitizen, conventional-changelog, @digitalroute/cz-conventional-changelog-for-jira, tldr)
+- name: Tools > Install node packages (commitizen, conventional-changelog, @digitalroute/cz-conventional-changelog-for-jira, tldr)
   shell: |
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
