@@ -61,7 +61,7 @@ workflow New-ComputerSetup {
 
 $AtStartup = New-JobTrigger -AtStartup
 New-ComputerSetup -JobName ComputerSetup
-Register-ScheduledJob -Name ResumeWorkflow -Trigger $AtStartup -ScriptBlock {Import-Module PSWorkflow; Get-Job ComputerSetup -State Suspended | Resume-Job}
+Register-ScheduledJob -Name ResumeWorkflow -Trigger $AtStartup -ScriptBlock {Import-Module PSWorkflow; Resume-Job -Name ComputerSetup}
 
 Import-Module PSWorkflow
 # Unregister scheduled job if completed
