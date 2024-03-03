@@ -53,6 +53,10 @@ workflow New-ComputerSetup {
     winget install JanDeDobbeleer.OhMyPosh -s winget
     Restart-Computer -Wait
 
+    #Setup WSL2
+    wsl --set-default-version 2
+
+
     # Install Ubuntu WSL2 distro
     winget install -e --id Canonical.Ubuntu.2204
     New-Item -Path $PROFILE -Type File -Force
