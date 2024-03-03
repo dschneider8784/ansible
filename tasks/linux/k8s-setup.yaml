@@ -1,0 +1,80 @@
+- name: Add Kubectl repositories to apt and install kubectl
+  become: true
+  shell: |
+    sudo apt-get update
+    if [ ! -d /etc/apt/keyrings ]; then
+      sudo mkdir -p -m 755 /etc/apt/keyrings
+    fi
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    sudo apt-get update
+    sudo apt-get install -y kubectl
+  tags:
+    - install
+    - k8s
+
+- name: Add Helm repositories to apt and install helm
+  become: true
+  shell: |
+    curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+    sudo apt-get update
+    sudo apt-get install helm
+  tags:
+    - install
+    - k8s
+    - helm
+
+- name: Install FluxCD CLI
+  become: true
+  shell: |
+    curl -s https://toolkit.fluxcd.io/install.sh | bash
+  tags:
+    - install
+    - k8s
+    - fluxcd
+
+- name: Install Kustomize
+  become: true
+  shell: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+  tags:
+    - install
+    - k8s
+    - kustomize
+
+- name: Install argocd-cli
+  become: true
+  shell: |
+    curl -sSL -o /tmp/argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    install -m 555 /tmp/argocd-linux-amd64 /usr/local/bin/argocd
+    rm /tmp/argocd-linux-amd64
+  tags:
+    - install
+    - k8s
+    - argocd
+
+- name: Install krew
+  shell: |
+    (
+      set -x; cd "$(mktemp -d)" &&
+      OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+      ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+      KREW="krew-${OS}_${ARCH}" &&
+      curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+      tar zxvf "${KREW}.tar.gz" &&
+      ./"${KREW}" install krew
+    )
+  tags:
+    - install
+    - k8s
+    - krew
+
+- name: Install kubectl plugins
+  shell: |
+    kubectl krew install ctx
+    kubectl krew install ns
+    kubectl krew install tree
+    kubectl krew install view-utilization
+  tags:
+    - install
+    - k8s
+    - kubectl-plugins
