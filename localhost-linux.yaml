@@ -13,10 +13,10 @@
     tags:
       - install
       - core
-  import_tasks:
-    - include: tasks/linux/core-setup.yml
-    - include: tasks/linux/tools-setup.yml
-    - include: tasks/linux/aws-setup.yml
-    - include: tasks/linux/docker-setup.yml
-    - include: tasks/linux/k8s-setup.yml
-    - include: tasks/linux/aws-setup.yml
+  tasks:
+    - import_tasks: tasks/linux/core-setup.yml
+    - import_tasks: tasks/linux/tools-setup.yml
+    - import_tasks: tasks/linux/aws-setup.yml
+    - import_tasks: tasks/linux/docker-setup.yml
+    - import_tasks: tasks/linux/k8s-setup.yml
+    - import_tasks: tasks/linux/aws-setup.yml
