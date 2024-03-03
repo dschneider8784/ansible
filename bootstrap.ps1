@@ -12,7 +12,6 @@ workflow New-ComputerSetup {
         
             $releases_url = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
         
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             $releases = Invoke-RestMethod -uri $releases_url
             $latestRelease = $releases.assets | Where { $_.browser_download_url.EndsWith('msixbundle') } | Select -First 1
         
