@@ -9,7 +9,7 @@ workflow New-ComputerSetup {
             Select-Object -ExpandProperty "browser_download_url"
 
     # download
-    Invoke-WebRequest -Uri $URL -OutFile "Setup.msix" -UseBasicParsing
+    Invoke-WebRequest -Uri $URL -OutFile "Setup.msix"
 
     # install
     Add-AppxPackage -Path "Setup.msix"
