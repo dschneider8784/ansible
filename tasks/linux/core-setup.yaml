@@ -13,13 +13,3 @@
   tags:
     - install
     - core
-
-- name: Core > Make /etc/apt/keyrings if it doesnt exist
-  become: true
-  shell: |
-    if [ ! -d /etc/apt/keyrings ]; then
-      mkdir -p -m 755 /etc/apt/keyrings
-    fi
-  tags:
-    - install
-    - core

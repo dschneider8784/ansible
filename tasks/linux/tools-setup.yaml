@@ -2,6 +2,7 @@
   ansible.builtin.git:
     repo: https://github.com/awslabs/git-secrets.git
     dest: /tmp/git-secrets
+    version: master
   tags:
     - install
     - git-secrets
@@ -9,39 +10,46 @@
 
 - name: Tools > Install Git-secrets
   become: true
-  shell: |
-    cd /tmp/git-secrets
-    make install
+  ansible.builtin.command: make install
+  args:
+    chdir: /tmp/git-secrets
   tags:
     - install
     - git-secrets
     - tools
 
-- name: Tools > Install gh-cli
-  become: true
-  shell: |
-    wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-    &&  chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" |  tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    &&  apt update \
-    &&  apt install gh -y
+- name: Tools > gh-cli Apt Setup
+  block:
+    - name: github-cli | no apt key
+      become: true
+      ansible.builtin.get_url:
+        url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+        dest: /etc/apt/keyrings/githubcli-archive-keyring.gpg
+
+    - name: github-cli | apt source
+      become: true
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+        state: present
   tags: 
     - install
     - gh-cli
     - tools
     - github
 
-- name: Tools > Install nvm
-  shell: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-  tags:
+- name: Tools > Install gh-cli
+  become: true
+  apt:
+    name: ["gh"]
+  tags: 
     - install
-    - nvm
-    - node
+    - gh-cli
     - tools
+    - github
 
 - name: Tools > Install latest nodejs lts
   shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     nvm install --lts
@@ -51,15 +59,40 @@
     - node
     - tools
 
-- name: Tools > Install node packages (commitizen, conventional-changelog, @digitalroute/cz-conventional-changelog-for-jira, tldr)
-  shell: |
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    npm install -g commitizen cz-conventional-changelog @digitalroute/cz-conventional-changelog-for-jira tldr
+- name: Tools > Node > Packages > Commitizen
+  npm:
+    name: commitizen
+    global: yes
   tags:
     - install
-    - nvm
     - node
     - tools
-    - commitizen
-    - tldr
+
+- name: Tools > Node > Packages > Conventional-Changelog
+  npm:
+    name: conventional-changelog
+    global: yes
+  tags:
+    - install
+    - node
+    - tools
+
+
+- name: Tools > Node > Packages > @digitalroute/cz-conventional-changelog-for-jira
+  npm:
+    name: '@digitalroute/cz-conventional-changelog-for-jira'
+    global: yes
+  tags:
+    - install
+    - node
+    - tools
+
+
+- name: Tools > Node > Packages > tldr
+  npm:
+    name: tldr
+    global: yes
+  tags:
+    - install
+    - node
+    - tools

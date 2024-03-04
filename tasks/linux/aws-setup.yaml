@@ -1,10 +1,15 @@
+- name: AWS > Unzip CLI
+  become: true
+  ansible.builtin.unarchive:
+    src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /tmp
+    remote_src: yes
+
 - name: AWS > Install CLI
   become: true
-  shell: |
-    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    unzip -qq awscliv2.zip
-    ./aws/install
-    rm -rdf aws awscliv2.zip
+  ansible.builtin.command: ./aws/install --update
+  args:
+    chdir: /tmp
   tags:
     - install
     - aws
