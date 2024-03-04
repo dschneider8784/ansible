@@ -20,3 +20,4 @@
     - import_tasks: tasks/linux/docker-setup.yaml
     - import_tasks: tasks/linux/k8s-setup.yaml
     - import_tasks: tasks/linux/aws-setup.yaml
+    - import_tasks: tasks/linux/zsh-setup.yaml
