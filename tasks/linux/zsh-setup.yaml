@@ -7,9 +7,19 @@
     - zsh
     - oh-my-zsh
 
+- name: Check the Oh My Zsh doesn't exist
+  stat:
+    path: /home/dschneider8784/.oh-my-zsh
+  register: oh_my_stats
+  tags:
+    - install
+    - zsh
+    - oh-my-zsh
+
 - name: Install Oh My Zsh
   shell: |
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  when: oh_my_stats.stat.exists == False
   tags:
     - install
     - zsh

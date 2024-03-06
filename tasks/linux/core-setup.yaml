@@ -2,6 +2,7 @@
   become: true
   apt:
     name: ["build-essential"]
+    state: present
   tags:
     - install
     - core
@@ -10,6 +11,7 @@
   become: true
   apt:
     name: ["curl", "wget", "unzip", "python3", "python3-pip", "fzf", "tmux", "apt-transport-https", "ca-certificates", "vim"]
+    state: present
   tags:
     - install
     - core

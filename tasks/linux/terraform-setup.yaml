@@ -1,0 +1,44 @@
+- name: Terraform > Add GPG Key
+  become: true
+  ansible.builtin.get_url:
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  tags:
+    - install
+    - terraform
+
+- name: Terraform > Add Apt Repo
+  become: true
+  ansible.builtin.apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+    state: present
+  tags:
+    - install
+    - terraform
+
+- name: Terraform > Install Packages (Terraform)
+  become: true
+  ansible.builtin.apt:
+    name: terraform
+    state: present
+  tags:
+    - install
+    - terraform
+
+- name: Terraform > Install Packages (Packer)
+  become: true
+  ansible.builtin.apt:
+    name: packer
+    state: present
+  tags:
+    - install
+    - terraform
+
+- name: Terraform > Install Packages (Vagrant)
+  become: true
+  ansible.builtin.apt:
+    name: vagrant
+    state: present
+  tags:
+    - install
+    - terraform
