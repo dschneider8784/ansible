@@ -9,7 +9,7 @@
 
 - name: Check the Oh My Zsh doesn't exist
   stat:
-    path: /home/dschneider8784/.oh-my-zsh
+    path: {{ ansible_env.HOME }}/.oh-my-zsh
   register: oh_my_stats
   tags:
     - install
