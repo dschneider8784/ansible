@@ -1,0 +1,28 @@
+- name: Download IntelliJ Community
+  ansible.builtin.get_url:
+    url: https://download.jetbrains.com/product?code=IIC&latest&distribution=linux
+    dest: /tmp/ideaIC.tar.gz
+  tags:
+    - install
+    - intellij
+
+- name: Extract IntelliJ Community
+  become: true
+  ansible.builtin.unarchive:
+    src: /tmp/ideaIC.tar.gz
+    dest: /opt/intellij
+    extra_opts: [--strip-components=1]
+  register: intellij_extract
+  tags:
+    - install
+    - intellij
+
+- name: Create IntelliJ Community Symlink
+  become: true
+  ansible.builtin.file:
+    src: '{{ intellij_extract.dest }}/bin/idea.sh'
+    dest: /usr/local/bin/idea
+    state: link
+  tags:
+    - install
+    - intellij

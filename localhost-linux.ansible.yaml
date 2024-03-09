@@ -26,3 +26,4 @@
     - import_tasks: tasks/linux/aws-setup.yaml
     - import_tasks: tasks/linux/zsh-setup.yaml
     - import_tasks: tasks/linux/terraform-setup.yaml
+    - import_tasks: tasks/linux/intellij-setup.yaml

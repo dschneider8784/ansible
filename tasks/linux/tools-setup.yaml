@@ -47,9 +47,18 @@
     - tools
     - github
 
+- name: Tools > Download > NVM
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh
+    dest: /tmp/nvm-install.sh
+  tags:
+    - install
+    - nvm
+    - node
+    - tools
+
 - name: Tools > Install latest nodejs lts
   shell: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     nvm install --lts
