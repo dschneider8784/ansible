@@ -3,6 +3,7 @@
   ansible.builtin.get_url:
     url: https://apt.releases.hashicorp.com/gpg
     dest: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    state: absent
   tags:
     - install
     - terraform
@@ -11,7 +12,7 @@
   become: true
   ansible.builtin.apt_repository:
     repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
-    state: present
+    state: absent
   tags:
     - install
     - terraform
@@ -20,7 +21,7 @@
   become: true
   ansible.builtin.apt:
     name: terraform
-    state: present
+    state: absent
   tags:
     - install
     - terraform
@@ -29,7 +30,7 @@
   become: true
   ansible.builtin.apt:
     name: packer
-    state: present
+    state: absent
   tags:
     - install
     - terraform
@@ -38,7 +39,60 @@
   become: true
   ansible.builtin.apt:
     name: vagrant
+    state: absent
+  tags:
+    - install
+    - terraform
+
+- name: OpenTofu > Get Apt GPG Key
+  ansible.builtin.get_url:
+    url: https://get.opentofu.org/opentofu.gpg
+    dest: /etc/apt/keyrings/opentofu.gpg
+  tags:
+    - install
+    - terraform
+    - opentofu
+    - tofu
+
+- name: OpenTofu Packages > Get Apt GPG Key
+  ansible.builtin.get_url:
+    url: https://packages.opentofu.org/opentofu/tofu/gpgkey
+    dest: /etc/apt/keyrings/opentofu-repo.gpg
+  tags:
+    - install
+    - terraform
+    - opentofu
+    - tofu
+
+- name: OpenTofu > Add Binaries Apt Repo
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main"
     state: present
   tags:
     - install
     - terraform
+    - opentofu
+    - tofu
+
+- name: Terraform > Add Source Apt Repo
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb-src [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main"
+    state: present
+  tags:
+    - install
+    - terraform
+    - opentofu
+    - tofu
+
+- name: OpenTofu > Install Packages (tofu)
+  become: true
+  ansible.builtin.apt:
+    name: tofu
+    state: present
+  tags:
+    - install
+    - terraform
+    - opentofu
+    - tofu
