@@ -59,6 +59,7 @@
 
 - name: K8s > Install kubectl plugins (ctx, ns, tree, view-utilization)
   shell: |
+    export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
     kubectl krew install ctx
     kubectl krew install ns
     kubectl krew install tree
