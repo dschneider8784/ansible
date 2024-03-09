@@ -9,6 +9,7 @@
     - tofu
 
 - name: OpenTofu Packages > Get Apt GPG Key
+  become: true
   ansible.builtin.get_url:
     url: https://packages.opentofu.org/opentofu/tofu/gpgkey
     dest: /etc/apt/keyrings/opentofu-repo.gpg
